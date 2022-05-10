@@ -4,26 +4,32 @@
 <head>
 	<meta charset="utf-8" />
 	<title>Stock Calculator - Home</title>
+    <!-- Bootstrap Link -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous">
 </head>
 
-<body>
-	<h1>Welcome, <%- name %></h1>
-    <h2>Your Current Transactions:</h2>
-    <div>
-        <%- table %>
-    </div>
-    <h2>Here is your balance: <%- balance %></h2>
-	<form action="/home" method="post">
-		<fieldset>
-            <h2>Add a new stock transaction:</h2>            
-			<label>Date of transaction: <input type="date" name="date"/></label>
-            <label>Name of Stock: <input type="text" name="stock"/></label>
-            <label>Number of Stock Purchases: <input type="number" name="numStock"/></label>
-        </fieldset>
+<body class="bg-dark text-white">
+    <div class="p-5 mb-2 bg-dark bg-gradient position-absolute top-50 start-50 translate-middle rounded-3">
+        <h1>Welcome, <%- name %></h1>
+        <h3>Your balance: <%- balance %></h3>
         <br>
-		<input type="submit" value="Submit Transaction"/>
-	</form>
-    <a href="/">Signout</a>
+        <h4>List of Your Current Transactions:</h4>
+        <div>
+            <%- table %>
+        </div>
+        <br>
+        <form action="/home" method="post">
+            <h4>Add a new stock transaction:</h4>            
+            <label class="form-label">Date of transaction <input class="form-control" type="date" name="date"/></label>
+            <label class="form-label">Name of Stock <input class="form-control" type="text" name="stock"/></label>
+            <label class="form-label">Number of Stock Purchases <input class="form-control" type="number" name="numStock"/></label>
+            <br>
+            <br>
+            <input class="btn btn-secondary" type="submit" value="Submit Transaction"/>
+        </form>
+        <hr>
+        <a class="link-light" style="text-decoration: none;" href="/">Signout</a>
+    </div>
 </body>
 
 </html>
