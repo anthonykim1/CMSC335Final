@@ -27,7 +27,7 @@ const client = new MongoClient(uri, { useNewUrlParser: true, useUnifiedTopology:
 
 /****** START SERVER ON THE PORT 5000 ******/
 let app = express();
-http.createServer(app).listen(5000);
+http.createServer(app).listen(7000);
 
 /****** MANAGING APP ROUTES******/
 app.use(bodyParser.urlencoded({extended:false}));
