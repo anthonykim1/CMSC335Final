@@ -3,7 +3,9 @@ var yf = require('yahoo-finance');
 
 // Function that takes in symbol and date as parameter and returns net gain/loss on single stock position
 // first index: 0 index corresponds to today's and last will represent date user bought his/her stock 
-function spitNetGainSingleStock(ticker, date) {
+
+// warning: make sure you use .then (when calling from outside) otherwise it wouldnt show properly
+async function spitNetGainSingleStock(ticker, date, numStock) {
     var answer;
 
     var today = new Date();
@@ -14,29 +16,24 @@ function spitNetGainSingleStock(ticker, date) {
 
     today = yyyy + "-" + mm + "-" + dd;
 
-    yf.historical({
+    let we = await yf.historical({
         symbol: ticker,
         from: date,
         to: today,
-    }, function (error, result) {
+    }, async function (error, result) {
+        if (error) {
+            console.log("wrong stock symbol probably");
+        }
         answer = result;
-        let tryThis = JSON.parse(JSON.stringify(result[0]));
-        // console.log(tryThis);
-        console.log(tryThis["close"]);
-        console.log(typeof tryThis["close"]);
-
-        let todayPrice = JSON.stringify(result[0], null, 2);
-        let userBoughtPrice = JSON.stringify(result[result.length - 1], null, 2);
-        // console.log(todayPrice);
-        // console.log(userBoughtPrice);
-         // calculate net gain/loss
-        //  console.log(todayPrice["close"]);
-        //  console.log(typeof userBoughtPrice);
-        netGain = Number(todayPrice["close"]) - Number(userBoughtPrice["close"]);
-        // console.log(netGain)
+        let tryThis = await JSON.parse(JSON.stringify(result[0]));
+        let todayPrice = await JSON.parse(JSON.stringify(result[0]));
+        let userBoughtPrice = await JSON.parse(JSON.stringify(result[result.length-1]));
+        netGain = Number(todayPrice["close"]) - Number(userBoughtPrice["close"]); 
     });
-    return netGain;
+    return Math.round (Number(numStock) * netGain);
 }
 
+module.exports = { spitNetGainSingleStock };
 
-console.log(spitNetGainSingleStock("TSLA", "2022-01-03"));
+// example of function call
+// spitNetGainSingleStock("TSLA", "2022-01-03").then(function(result) {console.log(result)});
