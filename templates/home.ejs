@@ -1,0 +1,29 @@
+<!doctype html>
+<html lang="en">
+
+<head>
+	<meta charset="utf-8" />
+	<title>Stock Calculator - Home</title>
+</head>
+
+<body>
+	<h1>Welcome, <%- name %></h1>
+    <h2>Your Current Transactions:</h2>
+    <div>
+        <%- table %>
+    </div>
+    <h2>Here is your balance: <%- balance %></h2>
+	<form action="/home" method="post">
+		<fieldset>
+            <h2>Add a new stock transaction:</h2>            
+			<label>Date of transaction: <input type="date" name="date"/></label>
+            <label>Name of Stock: <input type="text" name="stock"/></label>
+            <label>Number of Stock Purchases: <input type="number" name="numStock"/></label>
+        </fieldset>
+        <br>
+		<input type="submit" value="Submit Transaction"/>
+	</form>
+    <a href="/">Signout</a>
+</body>
+
+</html>
