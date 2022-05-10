@@ -25,20 +25,13 @@ const databaseAndCollection = {db: dbName, collection: dbCollection};
 const uri = `mongodb+srv://${userName}:${password}@cluster0.vbckr.mongodb.net/${dbName}?retryWrites=true&w=majority`;
 const client = new MongoClient(uri, { useNewUrlParser: true, useUnifiedTopology: true, serverApi: ServerApiVersion.v1 });
 
-/****** MANAGING TERMINAL ARGUMENTS ******/
-process.stdin.setEncoding("utf8");
-if (process.argv.length != 3) {
-    process.stdout.write(`Incorrect number of arguments\n`);
-    process.exit(0);
-}
-
-/****** START SERVER ON THE PORT NUMBER ******/
-let portNumber = process.argv[2];
+/****** START SERVER ON THE PORT 5000 ******/
 let app = express();
-http.createServer(app).listen(portNumber);
+http.createServer(app).listen(process.env.PORT || 5000);
 
 /****** MANAGING APP ROUTES******/
 app.use(bodyParser.urlencoded({extended:false}));
+app.use(express.static(__dirname + '/public'));
 app.set("views", path.resolve(__dirname, "templates"));
 app.set("view engine", "ejs");
 app.use(cookieParser());
@@ -55,7 +48,11 @@ app.get("/", function (_, response) {
 });
 
 app.get("/login", function (_, response) {
-    response.render("login");
+    response.render("login", {warning: ""});
+});
+
+app.post("/login", function(_, response) {
+    response.render("login", {warning: "INVALID USERNAME OR PASSWORD"});
 });
 
 app.post("/homeAfterLogin", function (request, response) {
@@ -74,20 +71,24 @@ app.post("/homeAfterLogin", function (request, response) {
                 response.render("home", responseVariables);
             })
         } else {
-            response.redirect("/login");
+            response.redirect(307, "/login");
         }
     });
 });
 
 app.get("/signup", function (_, response) {
-    response.render("signup");
+    response.render("signup", {usernameWarning: ""});
+});
+
+app.post("/signup", function (_, response) {
+    response.render("signup", {usernameWarning: "USERNAME ALREADY TAKEN"});
 });
 
 app.post("/homeAfterSignup", function (request, response) {
     
     verifyExistingUsername(client, databaseAndCollection, request.body.username).then(function(result) {
         if (result) {
-            response.redirect("/signup");
+            response.redirect(307, "/signup");
         } else {
             request.session.username = request.body.username;
             request.session.name = request.body.name;
@@ -142,24 +143,4 @@ app.post("/logout", (request, response) => {
       message = "You were not logged in";
     }
     response.send(message);
-});
-
-/****** MANAGING TERMINAL OUTPUT AND PROMPT INTERACTION ******/
-process.stdout.write("Web server started and running at http://localhost:" + portNumber + "\n");
-let prompt = "Stop to shutdown the server: ";
-process.stdout.write(prompt);
-
-process.stdin.on("readable", function () {
-    let dataInput = process.stdin.read();
-    if (dataInput !== null) {
-        let command = dataInput.trim();
-        if (command === "stop") {
-            process.stdout.write(`Shutting down the server\n`);
-            exit(0);
-        } else {
-        process.stdout.write(`Invalid command: ${command}\n`);
-        }
-        process.stdout.write(prompt);
-        process.stdin.resume();
-    }
 });

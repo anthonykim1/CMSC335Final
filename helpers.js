@@ -1,3 +1,5 @@
+/****** JS HELPER FUNCTIONS ******/
+
 function arrayToHTMLTable(items) {
     let htmlTable = "<table class='table table-dark table-striped'><tr><th>Date</th><th>Stock</th><th>Number of Stock Purchases</th></tr>";
     if (items != []) {
