@@ -25,17 +25,9 @@ const databaseAndCollection = {db: dbName, collection: dbCollection};
 const uri = `mongodb+srv://${userName}:${password}@cluster0.vbckr.mongodb.net/${dbName}?retryWrites=true&w=majority`;
 const client = new MongoClient(uri, { useNewUrlParser: true, useUnifiedTopology: true, serverApi: ServerApiVersion.v1 });
 
-/****** MANAGING TERMINAL ARGUMENTS ******/
-process.stdin.setEncoding("utf8");
-if (process.argv.length != 3) {
-    process.stdout.write(`Incorrect number of arguments\n`);
-    process.exit(0);
-}
-
-/****** START SERVER ON THE PORT NUMBER ******/
-let portNumber = process.argv[2];
+/****** START SERVER ON THE PORT 5000 ******/
 let app = express();
-http.createServer(app).listen(portNumber);
+http.createServer(app).listen(5000);
 
 /****** MANAGING APP ROUTES******/
 app.use(bodyParser.urlencoded({extended:false}));
@@ -142,24 +134,4 @@ app.post("/logout", (request, response) => {
       message = "You were not logged in";
     }
     response.send(message);
-});
-
-/****** MANAGING TERMINAL OUTPUT AND PROMPT INTERACTION ******/
-process.stdout.write("Web server started and running at http://localhost:" + portNumber + "\n");
-let prompt = "Stop to shutdown the server: ";
-process.stdout.write(prompt);
-
-process.stdin.on("readable", function () {
-    let dataInput = process.stdin.read();
-    if (dataInput !== null) {
-        let command = dataInput.trim();
-        if (command === "stop") {
-            process.stdout.write(`Shutting down the server\n`);
-            exit(0);
-        } else {
-        process.stdout.write(`Invalid command: ${command}\n`);
-        }
-        process.stdout.write(prompt);
-        process.stdin.resume();
-    }
 });
