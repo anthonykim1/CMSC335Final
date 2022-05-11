@@ -55,26 +55,7 @@ app.post("/login", function(_, response) {
     response.render("login", {warning: "INVALID USERNAME OR PASSWORD"});
 });
 
-app.post("/homeAfterLogin", function (request, response) {
-    verifyReturningUser(client, databaseAndCollection, request.body.username, request.body.password).then(function(result) {
-        if (result) {
-            request.session.username = request.body.username;
-            request.session.name = result.name;
-            request.session.save();
 
-            getUserData(client, databaseAndCollection, request.session.username).then(function(result) {
-                responseVariables = {
-                    name: request.session.name,
-                    balance: 0,
-                    table: arrayToHTMLTable(result.transactions)
-                };
-                response.render("home", responseVariables);
-            })
-        } else {
-            response.redirect(307, "/login");
-        }
-    });
-});
 
 app.get("/signup", function (_, response) {
     response.render("signup", {usernameWarning: ""});
@@ -86,13 +67,14 @@ app.post("/signup", function (_, response) {
 
 app.post("/homeAfterSignup", function (request, response) {
     
-    verifyExistingUsername(client, databaseAndCollection, request.body.username).then(function(result) {
+    verifyExistingUsername(client, databaseAndCollection, request.body.username).then(async function(result) {
         if (result) {
             response.redirect(307, "/signup");
         } else {
             request.session.username = request.body.username;
             request.session.name = request.body.name;
             request.session.save();
+            // request.session.balanace = [0,0];
 
             let variables = { 
                 name: request.body.name,
@@ -102,12 +84,35 @@ app.post("/homeAfterSignup", function (request, response) {
             };
             insertNewUser(client, databaseAndCollection, variables);
 
+            let temp = await getUpdatedBalance(client, databaseAndCollection, request.session.username);
             let responseVariables = {
                 name: request.session.name,
-                balance: getUpdatedBalance(),
+                balance: 0,
                 table: arrayToHTMLTable([])
             };
             response.render("home", responseVariables);
+        }
+    });
+});
+
+app.post("/homeAfterLogin", function (request, response) {
+    verifyReturningUser(client, databaseAndCollection, request.body.username, request.body.password).then(function(result) {
+        if (result) {
+            request.session.username = request.body.username;
+            request.session.name = result.name;
+            request.session.save();
+            // request.session.balance = result.balance;
+
+            getUserData(client, databaseAndCollection, request.session.username).then(function(result) {
+                responseVariables = {
+                    name: request.session.name,
+                    balance: request.session.balance[0],
+                    table: arrayToHTMLTable(result.transactions)
+                };
+                response.render("home", responseVariables);
+            })
+        } else {
+            response.redirect(307, "/login");
         }
     });
 });
@@ -120,10 +125,16 @@ app.post("/home", function (request, response) {
     }
     updateUserTransactions(client, databaseAndCollection, request.session.username,transaction).then(function(result) {
         if (result) {
-            getUserData(client, databaseAndCollection, request.session.username).then(function(result) {
+            request.session.save();
+            request.session.balance = result.balance;
+
+            getUserData(client, databaseAndCollection, request.session.username).then(async function(result) {
+                let temp = await getUpdatedBalance(client, databaseAndCollection, request.session.username);
+                request.session.balance = result.balance; // this FIXED IT
+                // console.log(request.session.balance);
                 responseVariables = {
                     name: request.session.name,
-                    balance: getUpdatedBalance(),
+                    balance: request.session.balance[0],
                     table: arrayToHTMLTable(result.transactions)
                 };
                 response.render("home", responseVariables);

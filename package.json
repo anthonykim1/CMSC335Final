@@ -26,6 +26,8 @@
     "express-session": "^1.17.2",
     "http": "^0.0.1-security",
     "mongodb": "^4.5.0",
-    "nodemon": "^2.0.16"
+    "nodemon": "^2.0.16",
+    "request": "^2.88.2",
+    "yahoo-finance": "^0.3.7"
   }
 }
