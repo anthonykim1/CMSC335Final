@@ -101,12 +101,21 @@ app.post("/homeAfterLogin", function (request, response) {
             request.session.username = request.body.username;
             request.session.name = result.name;
             request.session.save();
-            // request.session.balance = result.balance;
+            request.session.balance = result.balance;
 
             getUserData(client, databaseAndCollection, request.session.username).then(function(result) {
+                request.session.balance = result.balance; // this FIXED IT
+                var temp;
+
+                if (!request.session.balance) {
+                    temp = 0;
+                } else {
+                    temp = request.session.balance[0];
+                }
+
                 responseVariables = {
                     name: request.session.name,
-                    balance: request.session.balance[0],
+                    balance: temp,
                     table: arrayToHTMLTable(result.transactions)
                 };
                 response.render("home", responseVariables);
@@ -130,11 +139,19 @@ app.post("/home", function (request, response) {
 
             getUserData(client, databaseAndCollection, request.session.username).then(async function(result) {
                 let temp = await getUpdatedBalance(client, databaseAndCollection, request.session.username);
-                request.session.balance = result.balance; // this FIXED IT
-                // console.log(request.session.balance);
+                request.session.balance = result.balance; 
+                
+                var tempBalance;
+
+                if (!request.session.balance) {
+                    tempBalance = 0;
+                } else {
+                    tempBalance = request.session.balance[0];
+                }
+
                 responseVariables = {
                     name: request.session.name,
-                    balance: request.session.balance[0],
+                    balance: tempBalance,
                     table: arrayToHTMLTable(result.transactions)
                 };
                 response.render("home", responseVariables);
