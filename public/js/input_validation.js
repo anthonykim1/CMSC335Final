@@ -11,6 +11,16 @@ function check_pass_confirmation() {
 
 }
 
+function check_ticker_date() {
+    if (document.getElementById("dateID").value.length ==0 || document.getElementById("stockID").value.length==0) {
+        document.getElementById("invalidDateStock").innerHTML = "Double check ticker and date";
+        return false;
+    } else {
+        return true;
+    }
+}
+
+
 function check_signup_fields_non_empty() {
     /* Checks that all the fields of the signup page are completed */
     console.log(document.getElementById("signup-name").value.length);
@@ -42,3 +52,5 @@ function confirm_signup() {
     return true;
 
 }
+
+module.exports = {check_ticker_date};

@@ -7,6 +7,8 @@
     <!-- Bootstrap Link -->
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous">
     <link href="css/style.css" rel="stylesheet" type="text/css"/>
+    <script src="js/input_validation.js"></script>
+    <script src="js/stockAPIFunctions.js"></script>
 </head>
 
 <body class="bg-dark text-white">
@@ -20,15 +22,16 @@
         </div>
         <br>
         
-        <form action="/home" method="post">
+        <form action="/home" method="post" onsubmit="return check_ticker_date()">
             <h4>Add a new stock transaction:</h4>            
-            <label class="form-label">Date of transaction <input class="form-control" type="date" name="date"/></label>
-            <label class="form-label">Name of Stock <input class="form-control" type="text" name="stock"/></label>
+            <label class="form-label">Date of transaction <input class="form-control" id="dateID" type="date" name="date"/></label>
+            <label class="form-label">Ticker Symbol <input class="form-control" type="text" id="stockID" name="stock"/></label>
+            <p class="mb-3 red-warnings" id="invalidDateStock"></p>
             <label class="form-label">Number of Stock Purchases <input class="form-control" type="number" name="numStock"/></label>
             <br>
             <br>
             <input class="btn btn-secondary" type="submit" value="Submit Transaction"/>
-
+            
             
         </form>
         <hr>
