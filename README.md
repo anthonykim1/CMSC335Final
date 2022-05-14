@@ -4,7 +4,7 @@ Team Members: Lily Qiu (UID:116558693) and Anthony Kim (UID:116515559)
 
 -----
 ## Accessing the Application
-* The application can be ran locally `node app.js` in the main directory folder
+* The application can be ran locally by typing `node app.js` in the terminal of the main directory folder
   * Visit the application locally at http://localhost:5000/
 
 * Visit the website at https://tranquil-stream-40284.herokuapp.com/
