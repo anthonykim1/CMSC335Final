@@ -25,6 +25,7 @@ We use this information to allow users to add their stocks that they have bought
 http://www.npmjs.com/package/yahoo-finance
 
 ---
-
+## Youtube Demo Video
+https://youtu.be/3yT3_yKqCms
 
   
