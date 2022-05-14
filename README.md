@@ -1,6 +1,6 @@
 # CMSC335Final 
 
-Team Members: Lily Qiu (UID:116558693) and Anthony Kim
+Team Members: Lily Qiu (UID:116558693) and Anthony Kim (UID:116515559)
 
 -----
 ## Accessing the Application
